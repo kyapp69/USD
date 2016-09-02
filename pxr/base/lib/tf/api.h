@@ -30,6 +30,8 @@
 #   define TF_API
 #   define TF_LOCAL
 #   define TF_PY_API
+#   define TF_API_TEMPLATE_CLASS(...)
+#   define TF_API_TEMPLATE_STRUCT(...)
 #else
 #   if defined(TF_EXPORTS)
 #       define TF_API ARCH_EXPORT

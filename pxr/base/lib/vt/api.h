@@ -29,6 +29,8 @@
 #if defined(VT_STATIC)
 #   define VT_API
 #   define VT_LOCAL
+#   define VT_API_TEMPLATE_CLASS(...)
+#   define VT_API_TEMPLATE_STRUCT(...)
 #else
 #   if defined(VT_EXPORTS)
 #       define VT_API ARCH_EXPORT

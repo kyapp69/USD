@@ -30,6 +30,8 @@
 #if defined(ARCH_STATIC)
 #   define ARCH_API
 #   define ARCH_LOCAL
+#   define ARCH_API_TEMPLATE_CLASS(...)
+#   define ARCH_API_TEMPLATE_STRUCT(...)
 #else
 #   if defined(ARCH_EXPORTS)
 #       define ARCH_API ARCH_EXPORT

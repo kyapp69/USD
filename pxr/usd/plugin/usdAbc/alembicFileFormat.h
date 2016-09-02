@@ -34,7 +34,7 @@
     ((Version, "1.0"))                  \
     ((Target,  "usd"))
 
-TF_DECLARE_PUBLIC_TOKENS(UsdAbcAlembicFileFormatTokens, USDABC_ALEMBIC_FILE_FORMAT_TOKENS);
+TF_DECLARE_PUBLIC_TOKENS(UsdAbcAlembicFileFormatTokens, ARCH_EXPORT, USDABC_ALEMBIC_FILE_FORMAT_TOKENS);
 
 TF_DECLARE_WEAK_AND_REF_PTRS(UsdAbcAlembicFileFormat);
 TF_DECLARE_WEAK_AND_REF_PTRS(SdfLayerBase);

@@ -61,7 +61,7 @@ class SdfAbstractDataValue;
     (disableInstancing) \
     (promoteInstances) \
     /* end */
-TF_DECLARE_PUBLIC_TOKENS(UsdAbc_AlembicContextFlagNames,
+TF_DECLARE_PUBLIC_TOKENS(UsdAbc_AlembicContextFlagNames, ARCH_EXPORT,
                          USDABC_ALEMBIC_CONTEXT_FLAG_NAMES);
 
 // A namespace so we can bring Alembic namespaces into it.
@@ -76,7 +76,7 @@ using namespace ::Alembic::Abc;
 #define USD_MAKE_USD_TYPE(r, unused, elem) \
     ((SDF_VALUE_TAG(elem), SDF_VALUE_TRAITS_TYPE(elem)::Name())) \
     ((BOOST_PP_CAT(SDF_VALUE_TAG(elem), Array), SDF_VALUE_TRAITS_TYPE(elem)::ShapedName()))
-TF_DECLARE_PUBLIC_TOKENS(UsdAbc_UsdDataTypes,
+TF_DECLARE_PUBLIC_TOKENS(UsdAbc_UsdDataTypes, ARCH_EXPORT,
     BOOST_PP_SEQ_FOR_EACH(USD_MAKE_USD_TYPE, ~, SDF_VALUE_TYPES)
     _SDF_VALUE_TYPE_NAME_TOKENS
 );
@@ -96,7 +96,7 @@ TF_DECLARE_PUBLIC_TOKENS(UsdAbc_UsdDataTypes,
     (Scope) \
     (Xform) \
     /* end */
-TF_DECLARE_PUBLIC_TOKENS(UsdAbcPrimTypeNames, USD_ABC_PRIM_TYPE_NAMES);
+TF_DECLARE_PUBLIC_TOKENS(UsdAbcPrimTypeNames, ARCH_EXPORT, USD_ABC_PRIM_TYPE_NAMES);
 
 // Property names in the UsdGeom schema.
 #define USD_ABC_GPRIM_NAMES \
@@ -110,14 +110,14 @@ TF_DECLARE_PUBLIC_TOKENS(UsdAbcPrimTypeNames, USD_ABC_PRIM_TYPE_NAMES);
     USD_ABC_GPRIM_NAMES \
     USD_ABC_POINTBASED_NAMES \
     /* end */
-TF_DECLARE_PUBLIC_TOKENS(UsdAbcPropertyNames, USD_ABC_PROPERTY_NAMES);
+TF_DECLARE_PUBLIC_TOKENS(UsdAbcPropertyNames, ARCH_EXPORT, USD_ABC_PROPERTY_NAMES);
 
 #define USD_ABC_CUSTOM_METADATA \
     (gprimDataRender) \
     (riName) \
     (riType) \
     /* end */
-TF_DECLARE_PUBLIC_TOKENS(UsdAbcCustomMetadata, USD_ABC_CUSTOM_METADATA);
+TF_DECLARE_PUBLIC_TOKENS(UsdAbcCustomMetadata, ARCH_EXPORT, USD_ABC_CUSTOM_METADATA);
 
 //
 // Alembic property value types.

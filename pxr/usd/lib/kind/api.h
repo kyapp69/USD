@@ -29,6 +29,8 @@
 #if defined(KIND_STATIC)
 #   define KIND_API
 #   define KIND_LOCAL
+#   define KIND_API_TEMPLATE_CLASS(...)
+#   define KIND_API_TEMPLATE_STRUCT(...)
 #else
 #   if defined(KIND_EXPORTS)
 #       define KIND_API ARCH_EXPORT

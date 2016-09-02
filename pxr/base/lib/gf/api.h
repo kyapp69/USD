@@ -29,6 +29,8 @@
 #if defined(GF_STATIC)
 #   define GF_API
 #   define GF_LOCAL
+#   define GF_API_TEMPLATE_CLASS(...)
+#   define GF_API_TEMPLATE_STRUCT(...)
 #else
 #   if defined(GF_EXPORTS)
 #       define GF_API ARCH_EXPORT

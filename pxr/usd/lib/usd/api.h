@@ -29,6 +29,8 @@
 #if defined(USD_STATIC)
 #   define USD_API
 #   define USD_LOCAL
+#   define USD_API_TEMPLATE_CLASS(...)
+#   define USD_API_TEMPLATE_STRUCT(...)
 #else
 #   if defined(USD_EXPORTS)
 #       define USD_API ARCH_EXPORT

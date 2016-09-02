@@ -29,6 +29,8 @@
 #if defined(USDGEOM_STATIC)
 #   define USDGEOM_API
 #   define USDGEOM_LOCAL
+#   define USDGEOM_API_TEMPLATE_CLASS(...)
+#   define USDGEOM_API_TEMPLATE_STRUCT(...)
 #else
 #   if defined(USDGEOM_EXPORTS)
 #       define USDGEOM_API ARCH_EXPORT

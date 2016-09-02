@@ -29,6 +29,8 @@
 #if defined(WORK_STATIC)
 #   define WORK_API
 #   define WORK_LOCAL
+#   define WORK_API_TEMPLATE_CLASS(...)
+#   define WORK_API_TEMPLATE_STRUCT(...)
 #else
 #   if defined(WORK_EXPORTS)
 #       define WORK_API ARCH_EXPORT

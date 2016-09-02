@@ -29,6 +29,8 @@
 #if defined(SDF_STATIC)
 #   define SDF_API
 #   define SDF_LOCAL
+#   define SDF_API_TEMPLATE_CLASS(...)
+#   define SDF_API_TEMPLATE_STRUCT(...)
 #else
 #   if defined(SDF_EXPORTS)
 #       define SDF_API ARCH_EXPORT

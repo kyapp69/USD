@@ -29,6 +29,8 @@
 #if defined(JS_STATIC)
 #   define JS_API
 #   define JS_LOCAL
+#   define JS_API_TEMPLATE_CLASS(...)
+#   define JS_API_TEMPLATE_STRUCT(...)
 #else
 #   if defined(JS_EXPORTS)
 #       define JS_API ARCH_EXPORT
