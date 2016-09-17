@@ -89,7 +89,7 @@ public:
 	SDF_API std::string GetString() const;
 
     /// Returns true if this object identifies a property spec, false otherwise.
-    bool IsProperty() const;
+    SDF_API bool IsProperty() const;
 
     /// Returns the full path to the spec identified by this object.
     const SdfPath& GetFullSpecPath() const
@@ -547,7 +547,7 @@ private:
 class SdfAbstractDataSpecVisitor
 {
 public:
-    virtual ~SdfAbstractDataSpecVisitor();
+    SDF_API virtual ~SdfAbstractDataSpecVisitor();
 
     /// \c SdfAbstractData::VisitSpecs will call this function for every entry
     /// it contains, passing itself as \p data and the entry's spec id as \p id.

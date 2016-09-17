@@ -21,12 +21,12 @@
 // KIND, either express or implied. See the Apache License for the specific
 // language governing permissions and limitations under the Apache License.
 //
-#include "pxr/usd/usdAbc/alembicTest.h"
-#include "pxr/usd/usdAbc/alembicData.h"
 #include "pxr/usd/sdf/fileFormat.h"
 #include "pxr/usd/sdf/layer.h"
 #include "pxr/usd/sdf/schema.h"
 #include "pxr/base/tf/ostreamMethods.h"
+#include "pxr/usd/usdAbc/alembicTest.h"
+#include "pxr/usd/usdAbc/alembicData.h"
 #include <boost/foreach.hpp>
 #include <algorithm>
 #include <vector>

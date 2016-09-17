@@ -34,7 +34,7 @@ std::string ArchGetEnv(const std::string &name)
     {
         std::string result;
 
-        if (requiredSize < result.size())
+        if (result.size() < requiredSize)
             result.resize(requiredSize);
 
         getenv_s(&requiredSize, &result[0], requiredSize, name.c_str());
