@@ -180,6 +180,32 @@ Usd_Lerp(double alpha, const GfQuatd &lower, const GfQuatd &upper)
     return GfSlerp(alpha, lower, upper);
 }
 
+template <class T>
+inline void Usd_LerpArray(T *dst, double alpha, const T *lower, const T *upper, int num)
+{
+    for (int i = 0; i < num; ++i) {
+        dst[i] = GfLerp(alpha, lower[i], upper[i]);
+    }
+}
+
+template<> void Usd_LerpArray(half *dst, double alpha, const half *lower, const half *upper, int num);
+template<> void Usd_LerpArray(GfVec2h *dst, double alpha, const GfVec2h *lower, const GfVec2h *upper, int num);
+template<> void Usd_LerpArray(GfVec3h *dst, double alpha, const GfVec3h *lower, const GfVec3h *upper, int num);
+template<> void Usd_LerpArray(GfVec4h *dst, double alpha, const GfVec4h *lower, const GfVec4h *upper, int num);
+template<> void Usd_LerpArray(GfQuath *dst, double alpha, const GfQuath *lower, const GfQuath *upper, int num);
+
+template<> void Usd_LerpArray(float *dst, double alpha, const float *lower, const float *upper, int num);
+template<> void Usd_LerpArray(GfVec2f *dst, double alpha, const GfVec2f *lower, const GfVec2f *upper, int num);
+template<> void Usd_LerpArray(GfVec3f *dst, double alpha, const GfVec3f *lower, const GfVec3f *upper, int num);
+template<> void Usd_LerpArray(GfVec4f *dst, double alpha, const GfVec4f *lower, const GfVec4f *upper, int num);
+template<> void Usd_LerpArray(GfQuatf *dst, double alpha, const GfQuatf *lower, const GfQuatf *upper, int num);
+
+template<> void Usd_LerpArray(double *dst, double alpha, const double *lower, const double *upper, int num);
+template<> void Usd_LerpArray(GfVec2d *dst, double alpha, const GfVec2d *lower, const GfVec2d *upper, int num);
+template<> void Usd_LerpArray(GfVec3d *dst, double alpha, const GfVec3d *lower, const GfVec3d *upper, int num);
+template<> void Usd_LerpArray(GfVec4d *dst, double alpha, const GfVec4d *lower, const GfVec4d *upper, int num);
+template<> void Usd_LerpArray(GfQuatd *dst, double alpha, const GfQuatd *lower, const GfQuatd *upper, int num);
+
 /// \class Usd_LinearInterpolator
 ///
 /// Object implementing linear interpolation for attribute values.
@@ -302,10 +328,7 @@ private:
         }
 
         const double parametricTime = (time - lower) / (upper - lower);
-        for (size_t i = 0, j = _result->size(); i != j; ++i) {
-            (*_result)[i] = Usd_Lerp(
-                parametricTime, (*_result)[i], upperValue[i]);
-        }
+        Usd_LerpArray(_result->data(), parametricTime, _result->data(), upperValue.data(), _result->size());
 
         return true;
     }        

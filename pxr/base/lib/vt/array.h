@@ -51,6 +51,8 @@
 
 #include <boost/functional/hash.hpp>
 
+#include "pxr/base/vt/alignedAllocator.h"
+
 /// \class VtArray 
 ///
 /// Represents an arbitrary dimensional rectangular container class.
@@ -106,7 +108,7 @@
 template<typename ELEM>
 class VtArray {
 
-    typedef boost::container::vector<ELEM> _VecType;
+    typedef boost::container::vector<ELEM, VtAlignedAllocator<ELEM, 0x20>> _VecType;
 
     // VtArray should derive from boost::equality_comparable, but because of
     // gcc's awesomeness, that increases the size of VtArray by a pointer.

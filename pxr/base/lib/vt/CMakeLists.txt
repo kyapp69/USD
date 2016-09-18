@@ -19,6 +19,7 @@ pxr_shared_library(vt
 
     PUBLIC_CLASSES
         array
+        alignedAllocator
         arrayPyBuffer
         dictionary
         functions
