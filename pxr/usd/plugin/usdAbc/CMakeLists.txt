@@ -32,6 +32,7 @@ pxr_plugin(usdAbc
         alembicWriter
 
     CPPFILES
+        DllMain.cpp
         moduleDeps.cpp
 
     PYMODULE_CPPFILES
