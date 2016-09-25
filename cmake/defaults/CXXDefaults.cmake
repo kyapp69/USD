@@ -60,3 +60,12 @@ set(_PXR_CXX_FLAGS ${_PXR_CXX_FLAGS} ${_PXR_CXX_WARNING_FLAGS})
 # CMake list to string.
 string(REPLACE ";" " "  _PXR_CXX_FLAGS "${_PXR_CXX_FLAGS}")
 
+
+if (${PXR_ENABLE_SIMD_LERP})
+    _add_define(USD_ENABLE_SIMD_LERP)
+endif()
+
+if (${PXR_ENABLE_CACHED_NEW})
+    _add_define(USD_ENABLE_CACHED_NEW)
+endif()
+

@@ -30,7 +30,7 @@
 #include <boost/preprocessor/seq/for_each.hpp>
 
 
-#ifdef ENABLE_ISPC_LERP
+#ifdef USD_ENABLE_SIMD_LERP
 #include "SIMDLerp.h"
 
 template<> void Usd_LerpArray(half *dst, double alpha, const half *lower, const half *upper, int num)

@@ -35,11 +35,13 @@ pxr_shared_library(vt
         api.h
         traits.h
         operators.h
+        cachedMalloc.h
         PRIVATE_CLASSES
         PRIVATE_HEADERS
         typeHeaders.h
 
     CPPFILES
+        cachedMalloc.cpp
         moduleDeps.cpp
 
     PYMODULE_CPPFILES

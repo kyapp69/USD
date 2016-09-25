@@ -31,6 +31,7 @@
 #include "pxr/base/vt/streamOut.h"
 #include "pxr/base/vt/traits.h"
 #include "pxr/base/vt/types.h"
+#include "pxr/base/vt/cachedNew.h"
 
 #include "pxr/base/tf/diagnostic.h"
 #include "pxr/base/tf/iterator.h"
@@ -452,6 +453,8 @@ class VtArray {
         }
 
         bool IsUnique() const { return _refCount == 1; }
+
+        VT_DEFINE_CACHED_OPERATOR_NEW(_Data)
 
         _VecType vec;
         Vt_Reserved reserved;

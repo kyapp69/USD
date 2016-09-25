@@ -39,6 +39,7 @@
 #include "pxr/base/vt/traits.h"
 #include "pxr/base/vt/types.h"
 #include "pxr/base/vt/api.h"
+#include "pxr/base/vt/cachedNew.h"
 
 #include <boost/aligned_storage.hpp>
 #include <boost/intrusive_ptr.hpp>
@@ -179,6 +180,8 @@ class VtValue
         bool IsUnique() const { return _refCount == 1; }
         T const &Get() const { return _obj; }
         T &GetMutable() { return _obj; }
+
+        VT_DEFINE_CACHED_OPERATOR_NEW(_Counted)
 
     private:
         T _obj;
