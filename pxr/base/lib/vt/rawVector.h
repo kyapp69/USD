@@ -54,6 +54,14 @@ public:
     iterator end() { return m_data + m_size; }
     const_iterator end() const { return m_data + m_size; }
 
+#ifdef USD_ENABLE_CACHED_NEW
+    static void* allocate(size_t size) { return VtCachedMalloc(size); }
+    static void deallocate(void *addr, size_t size) { VtCachedFree(size, addr); }
+#else
+    static void* allocate(size_t size) { return VtAlignedMalloc(size, 0x20); }
+    static void deallocate(void *addr, size_t size) { VtAlignedFree(addr); }
+#endif
+
     void reserve(size_t s)
     {
         if (s > m_capacity) {
@@ -61,9 +69,9 @@ public:
             size_t newsize = sizeof(T) * s;
             size_t oldsize = sizeof(T) * m_size;
 
-            T *newdata = (T*)VtCachedMalloc(newsize);
+            T *newdata = (T*)allocate(newsize);
             memcpy(newdata, m_data, oldsize);
-            VtCachedFree(oldsize, m_data);
+            deallocate(m_data, oldsize);
             m_data = newdata;
             m_capacity = s;
         }
@@ -78,7 +86,7 @@ public:
     void clear()
     {
         size_t oldsize = sizeof(T) * m_size;
-        VtCachedFree(oldsize, m_data);
+        deallocate(m_data, oldsize);
         m_data = nullptr;
         m_size = m_capacity = 0;
     }
@@ -133,14 +141,9 @@ public:
         --m_size;
     }
 
-    bool IsIdentical(const VtRawVector& other) const
-    {
-        return m_data == other.m_data;
-    }
-
     bool operator == (const VtRawVector& other) const
     {
-        return IsIdentical(other) || (m_size == other.m_size && memcmp(m_data, other.m_data, sizeof(T)*m_size));
+        return m_size == other.m_size && memcmp(m_data, other.m_data, sizeof(T)*m_size)==0;
     }
 
     bool operator != (const VtRawVector& other) const
