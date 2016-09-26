@@ -886,13 +886,13 @@ SdfLayer::FindRelativeToLayer(
     return Find(anchor->ComputeAbsolutePath(layerPath), args);
 }
 
-std::set<double>
+SdfTimes
 SdfLayer::ListAllTimeSamples() const
 {
     return _data->ListAllTimeSamples();
 }
 
-std::set<double> 
+SdfTimes
 SdfLayer::ListTimeSamplesForPath(const SdfAbstractDataSpecId& id) const
 {
     return _data->ListTimeSamplesForPath(id);

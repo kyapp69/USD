@@ -39,7 +39,7 @@
 #include "pxr/base/vt/traits.h"
 #include "pxr/base/vt/types.h"
 #include "pxr/base/vt/api.h"
-#include "pxr/base/vt/cachedNew.h"
+#include "pxr/base/vt/allocator.h"
 
 #include <boost/aligned_storage.hpp>
 #include <boost/intrusive_ptr.hpp>

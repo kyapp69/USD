@@ -203,7 +203,7 @@ struct UsdAbc_AlembicWriteVisitor : public SdfAbstractDataSpecVisitor {
                 }
 
                 VtValue samples = data.Get(id, SdfFieldKeys->TimeSamples);
-                std::set<double> times = data.ListTimeSamplesForPath(id);
+                auto times = data.ListTimeSamplesForPath(id);
                 if (samples.IsEmpty()) {
                     if (times.size() <= 1) {
                         // Expected.
@@ -292,7 +292,7 @@ struct UsdAbc_AlembicWriteVisitor : public SdfAbstractDataSpecVisitor {
     }
 };
 
-static void UsdAbc_PrintTimes(const char* msg, const std::set<double>& times)
+static void UsdAbc_PrintTimes(const char* msg, const SdfTimes& times)
 {
     fprintf(stdout, "%s: [", msg);
     BOOST_FOREACH(double t, times) {
@@ -342,7 +342,7 @@ UsdAbc_TestAlembic(const std::string& pathname)
             // intended for the standard Alembic octopus file.
             SdfPath path("/octopus_low/octopus_lowShape.extent");
             SdfAbstractDataSpecId id(&path);
-            std::set<double> times = data->ListTimeSamplesForPath(id);
+            auto times = data->ListTimeSamplesForPath(id);
             if (not times.empty()) {
                 fprintf(stdout, "\nExtent samples:\n");
                 BOOST_FOREACH(double t, times) {
@@ -361,7 +361,7 @@ UsdAbc_TestAlembic(const std::string& pathname)
                     double t      = floor(*times.begin());
                     double tUpper = ceil(*times.rbegin());
                     for (; t <= tUpper; t += 1.0) {
-                        if (times.find(t) == times.end()) {
+                        if (std::lower_bound(times.begin(), times.end(), t) == times.end()) {
                             if (data->QueryTimeSample(id, t, (VtValue*)NULL)) {
                                 fprintf(stdout, "  %f: <expected sample>\n", t);
                             }

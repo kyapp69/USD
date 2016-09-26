@@ -1580,7 +1580,7 @@ private:
                                    const Usd_ResolveInfo &info,
                                    const UsdAttribute &attr,
                                    const GfInterval& interval,
-                                   std::vector<double>* times) const;
+                                   SdfTimes* times) const;
 
     size_t _GetNumTimeSamples(const UsdAttribute &attr) const;
 

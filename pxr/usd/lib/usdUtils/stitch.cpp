@@ -383,7 +383,7 @@ namespace {
         std::string strongFileName = strongLayer->GetDisplayName();
         bool hasStartTimeCode = strongLayer->HasStartTimeCode();
         bool hasEndTimeCode = strongLayer->HasEndTimeCode();
-        std::set<double> timeSamples = strongLayer->ListAllTimeSamples();
+        auto timeSamples = strongLayer->ListAllTimeSamples();
 
         if (hasStartTimeCode and not hasEndTimeCode) {
             TF_WARN("Missing endTimeCode in %s", strongFileName.c_str());

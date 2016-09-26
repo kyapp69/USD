@@ -29,7 +29,6 @@
 
 #include <boost/preprocessor/seq/for_each.hpp>
 
-
 #ifdef USD_ENABLE_SIMD_LERP
 #include "SIMDLerp.h"
 

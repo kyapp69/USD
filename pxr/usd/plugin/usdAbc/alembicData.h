@@ -78,9 +78,9 @@ public:
     virtual void Erase(const SdfAbstractDataSpecId&,
                        const TfToken& fieldName);
     virtual std::vector<TfToken> List(const SdfAbstractDataSpecId&) const;
-    virtual std::set<double>
+    virtual SdfTimes
     ListAllTimeSamples() const;
-    virtual std::set<double>
+    virtual SdfTimes
     ListTimeSamplesForPath(const SdfAbstractDataSpecId&) const;
     virtual bool
     GetBracketingTimeSamples(double time, double* tLower, double* tUpper) const;

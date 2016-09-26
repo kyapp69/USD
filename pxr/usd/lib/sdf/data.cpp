@@ -238,40 +238,51 @@ SdfData::List(const SdfAbstractDataSpecId& id) const
 // This is a basic prototype implementation of the time-sampling API
 // for in-memory, non cached presto layers.
 
-std::set<double>
+SdfTimes
 SdfData::ListAllTimeSamples() const
 {
+    if (_data.size() == 1) {
+        return ListTimeSamplesForPath(SdfAbstractDataSpecId(&_data.begin()->first));
+    }
+
     // Use a set to determine unique times.
-    std::set<double> times;
+    static thread_local SdfTimes times;
+    times.clear();
 
     TF_FOR_ALL(i, _data) {
-        std::set<double> timesForPath = 
+        auto& timesForPath = 
             ListTimeSamplesForPath(SdfAbstractDataSpecId(&i->first));
-        times.insert( timesForPath.begin(), timesForPath.end() );
+        times.insert(times.end(), timesForPath.begin(), timesForPath.end());
     }
+    std::sort(times.begin(), times.end());
 
     return times;
 }
 
-std::set<double>
+SdfTimes
 SdfData::ListTimeSamplesForPath(const SdfAbstractDataSpecId& id) const
 {
-    std::set<double> times;
-    
+    static thread_local SdfTimes times;
+
     VtValue value = Get(id, SdfDataTokens->TimeSamples);
     if (value.IsHolding<SdfTimeSampleMap>()) {
         const SdfTimeSampleMap & timeSampleMap =
             value.UncheckedGet<SdfTimeSampleMap>();
+        times.resize(timeSampleMap.size());
+        int i = 0;
         TF_FOR_ALL(j, timeSampleMap) {
-            times.insert(j->first);
+            times[i++] = (j->first);
         }
+    }
+    else {
+        times.clear();
     }
 
     return times;
 }
 
 static bool
-_GetBracketingTimeSamples(const std::set<double> & samples,
+_GetBracketingTimeSamples(const SdfTimes & samples,
                           const double time, double* tLower, double* tUpper)
 {
     if (samples.empty()) {
@@ -284,7 +295,7 @@ _GetBracketingTimeSamples(const std::set<double> & samples,
         // Time is at-or-after the last sample.
         *tLower = *tUpper = *samples.rbegin();
     } else {
-        std::set<double>::const_iterator i = samples.lower_bound(time);
+        auto i = std::lower_bound(samples.begin(), samples.end(), time);
         if (*i == time) {
             // Time is exactly on a sample.
             *tLower = *tUpper = *i;
@@ -302,7 +313,7 @@ bool
 SdfData::GetBracketingTimeSamples(
     double time, double* tLower, double* tUpper) const
 {
-    std::set<double> times = ListAllTimeSamples();
+    auto times = ListAllTimeSamples();
 
     return _GetBracketingTimeSamples(times, time, tLower, tUpper);
 }
@@ -326,7 +337,7 @@ SdfData::GetBracketingTimeSamplesForPath(
     const SdfAbstractDataSpecId& id, double time,
     double* tLower, double* tUpper) const
 {
-    std::set<double> times = ListTimeSamplesForPath(id);
+    auto times = ListTimeSamplesForPath(id);
     return _GetBracketingTimeSamples(times, time, tLower, tUpper);
 }
 

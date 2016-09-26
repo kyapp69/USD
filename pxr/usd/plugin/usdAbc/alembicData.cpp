@@ -93,7 +93,7 @@ TF_DEFINE_ENV_SETTING(USD_ABC_PARENT_INSTANCES, true,
 
 // The SdfAbstractData time samples type.
 // XXX: SdfAbstractData should typedef this.
-typedef std::set<double> UsdAbc_TimeSamples;
+typedef SdfTimes UsdAbc_TimeSamples;
 
 //
 // UsdAbc_AlembicData
@@ -291,13 +291,13 @@ UsdAbc_AlembicData::List(const SdfAbstractDataSpecId& id) const
     return _reader->List(id);
 }
 
-std::set<double>
+SdfTimes
 UsdAbc_AlembicData::ListAllTimeSamples() const
 {
     return _reader->ListAllTimeSamples();
 }
 
-std::set<double>
+SdfTimes
 UsdAbc_AlembicData::ListTimeSamplesForPath(const SdfAbstractDataSpecId& id) const
 {
     return _reader->ListTimeSamplesForPath(id).GetTimes();
@@ -307,7 +307,7 @@ bool
 UsdAbc_AlembicData::GetBracketingTimeSamples(
     double time, double* tLower, double* tUpper) const
 {
-    const std::set<double>& samples = _reader->ListAllTimeSamples();
+    const auto& samples = _reader->ListAllTimeSamples();
     return UsdAbc_AlembicDataReader::TimeSamples::Bracket(samples, time,
                                                      tLower, tUpper);
 }

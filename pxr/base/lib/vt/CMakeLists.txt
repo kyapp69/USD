@@ -19,7 +19,7 @@ pxr_shared_library(vt
 
     PUBLIC_CLASSES
         array
-        alignedAllocator
+        allocator
         arrayPyBuffer
         dictionary
         functions
@@ -35,13 +35,12 @@ pxr_shared_library(vt
         api.h
         traits.h
         operators.h
-        cachedMalloc.h
+        rawVector.h
         PRIVATE_CLASSES
         PRIVATE_HEADERS
         typeHeaders.h
 
     CPPFILES
-        cachedMalloc.cpp
         moduleDeps.cpp
 
     PYMODULE_CPPFILES

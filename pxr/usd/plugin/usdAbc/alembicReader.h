@@ -99,7 +99,7 @@ public:
     /// The type holds a set of Usd times and can return an Alembic index
     /// for each time.
     class TimeSamples {
-        typedef std::vector<double> _UsdTimeCodes;
+        typedef SdfTimes _UsdTimeCodes;
     public:
         typedef _UsdTimeCodes::const_iterator const_iterator;
 
@@ -120,13 +120,13 @@ public:
         size_t GetSize() const;
 
         /// Returns the Usd times.
-        std::set<double> GetTimes() const;
+        SdfTimes GetTimes() const;
 
         /// Returns the time sample at index \p index.
         double operator[](size_t index) const;
 
         /// Add these Usd times to the given set.
-        void AddTo(std::set<double>*) const;
+        void AddTo(SdfTimes*) const;
 
         /// Returns the index for Usd time \p usdTime and returns \c true
         /// or returns \c false if \p usdTime is not in the set of samples.
@@ -146,7 +146,7 @@ public:
     };
 
     /// Returns the sampled times over all properties.
-    const std::set<double>& ListAllTimeSamples() const;
+    const SdfTimes& ListAllTimeSamples() const;
 
     /// Returns the sampled times for the property with id \p id.
     const TimeSamples& 

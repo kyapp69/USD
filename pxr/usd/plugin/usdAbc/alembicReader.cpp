@@ -81,7 +81,7 @@ static TfStaticData<std::recursive_mutex> _hdf5;
 
 // The SdfAbstractData time samples type.
 // XXX: SdfAbstractData should typedef this.
-typedef std::set<double> UsdAbc_TimeSamples;
+typedef SdfTimes UsdAbc_TimeSamples;
 
 // A vector of Alembic times.
 typedef std::vector<chrono_t> _AlembicTimeSamples;
@@ -1260,7 +1260,7 @@ _ReaderContext::List(const SdfAbstractDataSpecId& id) const
     return result;
 }
 
-const std::set<double>&
+const SdfTimes&
 _ReaderContext::ListAllTimeSamples() const
 {
     return _allTimeSamples;
@@ -3659,7 +3659,7 @@ UsdAbc_AlembicDataReader::TimeSamples::TimeSamples()
 }
 
 UsdAbc_AlembicDataReader::TimeSamples::TimeSamples(
-    const std::vector<double>& times) :
+    const SdfTimes& times) :
     _times(times)
 {
     // Do nothing
@@ -3698,13 +3698,17 @@ UsdAbc_AlembicDataReader::TimeSamples::operator[](size_t index) const
 void
 UsdAbc_AlembicDataReader::TimeSamples::AddTo(UsdAbc_TimeSamples* samples) const
 {
-    samples->insert(_times.begin(), _times.end());
+    bool needs_sort = !samples->empty();
+    samples->insert(samples->end(), _times.begin(), _times.end());
+    if (needs_sort) {
+        std::sort(samples->begin(), samples->end());
+    }
 }
 
 bool
 UsdAbc_AlembicDataReader::TimeSamples::FindIndex(double usdTime,Index* index) const
 {
-    _UsdTimeCodes::const_iterator i =
+    auto i =
         std::lower_bound(_times.begin(), _times.end(), usdTime);
     if (i == _times.end() or *i != usdTime) {
         return false;
@@ -3887,7 +3891,7 @@ UsdAbc_AlembicDataReader::List(const SdfAbstractDataSpecId& id) const
     return _impl->List(id);
 }
 
-const std::set<double>&
+const SdfTimes&
 UsdAbc_AlembicDataReader::ListAllTimeSamples() const
 {
     return _impl->ListAllTimeSamples();

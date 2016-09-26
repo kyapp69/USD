@@ -1237,10 +1237,10 @@ public:
     /// \name Time-sample API
     /// @{
     SDF_API
-    std::set<double> ListAllTimeSamples() const;
+    SdfTimes ListAllTimeSamples() const;
     
     SDF_API
-    std::set<double> 
+    SdfTimes
     ListTimeSamplesForPath(const SdfAbstractDataSpecId& id) const;
 
     SDF_API
@@ -1299,7 +1299,7 @@ public:
     SDF_API
     size_t GetNumTimeSamplesForPath(const SdfPath& path) const;
     SDF_API
-    std::set<double> ListTimeSamplesForPath(const SdfPath& path) const;
+    SdfTimes ListTimeSamplesForPath(const SdfPath& path) const;
     SDF_API
     bool GetBracketingTimeSamplesForPath(const SdfPath& path, double time,
                                          double* tLower, double* tUpper);
@@ -1758,7 +1758,7 @@ SdfLayer::GetNumTimeSamplesForPath(const SdfPath& path) const
     return GetNumTimeSamplesForPath(SdfAbstractDataSpecId(&path));
 }
 
-inline std::set<double> 
+inline SdfTimes
 SdfLayer::ListTimeSamplesForPath(const SdfPath& path) const
 {
     return ListTimeSamplesForPath(SdfAbstractDataSpecId(&path));

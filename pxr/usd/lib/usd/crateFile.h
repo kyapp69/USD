@@ -146,7 +146,7 @@ private:
 
 class TimeSamples {
 public:
-    typedef Usd_Shared<vector<double>> SharedTimes;
+    typedef Usd_Shared<SdfTimes> SharedTimes;
 
     TimeSamples() : valueRep(0), valuesFileOffset(0) {}
 

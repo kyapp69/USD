@@ -74,10 +74,10 @@ public:
     /// \name Time-sample API
     /// @{
 
-    virtual std::set<double>
+    virtual SdfTimes
     ListAllTimeSamples() const;
     
-    virtual std::set<double>
+    virtual SdfTimes
     ListTimeSamplesForPath(const SdfAbstractDataSpecId& id) const;
 
     virtual bool

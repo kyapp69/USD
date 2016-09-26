@@ -5325,7 +5325,7 @@ UsdStage::_GetTimeSamplesInIntervalFromResolveInfo(
     const Usd_ResolveInfo &info,
     const UsdAttribute &attr,
     const GfInterval& interval,
-    std::vector<double>* times) const
+    SdfTimes* times) const
 {
     if ((interval.IsMinFinite() and interval.IsMinOpen())
         or (interval.IsMaxFinite() and interval.IsMaxOpen())) {
@@ -5334,8 +5334,8 @@ UsdStage::_GetTimeSamplesInIntervalFromResolveInfo(
         return false;
     }
 
-    const auto copySamplesInInterval = [](const std::set<double>& samples, 
-                                          vector<double>* target, 
+    const auto copySamplesInInterval = [](const SdfTimes& samples, 
+                                          SdfTimes* target, 
                                           const GfInterval& interval) 
     {
             const auto sampleRangeBegin = std::lower_bound(samples.begin(),
@@ -5351,7 +5351,7 @@ UsdStage::_GetTimeSamplesInIntervalFromResolveInfo(
         const SdfLayerRefPtr& layer = 
             info.layerStack->GetLayers()[info.layerIndex];
 
-        const std::set<double> samples = layer->ListTimeSamplesForPath(specId);
+        const auto samples = layer->ListTimeSamplesForPath(specId);
         if (not samples.empty()) {
             copySamplesInInterval(samples, times, interval);
             const SdfLayerOffset offset = info.offset.GetInverse();

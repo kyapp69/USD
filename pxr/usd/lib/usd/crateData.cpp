@@ -63,7 +63,7 @@ using std::vector;
 using namespace Usd_CrateFile;
 
 static inline bool
-_GetBracketingTimes(const vector<double> &times,
+_GetBracketingTimes(const SdfTimes &times,
                     const double time, double* tLower, double* tUpper)
 {
     if (times.empty()) {
@@ -76,7 +76,7 @@ _GetBracketingTimes(const vector<double> &times,
         // Time is at-or-after the last sample.
         *tLower = *tUpper = times.back();
     } else {
-        auto i = lower_bound(times.begin(), times.end(), time);
+        auto i = std::lower_bound(times.begin(), times.end(), time);
         if (*i == time) {
             // Time is exactly on a sample.
             *tLower = *tUpper = *i;
@@ -422,16 +422,14 @@ public:
             _EraseHelper(_flatData, id, field);
     }
 
-    inline std::set<double>
+    inline SdfTimes
     ListAllTimeSamples() const {
-        auto times = _ListAllTimeSamples();
-        return std::set<double>(times.begin(), times.end());
+        return _ListAllTimeSamples();
     }
 
-    inline std::set<double>
+    inline SdfTimes
     ListTimeSamplesForPath(const SdfAbstractDataSpecId& id) const {
-        auto const &times = _ListTimeSamplesForPath(id);
-        return std::set<double>(times.begin(), times.end());
+        return _ListTimeSamplesForPath(id);
     }
 
     inline bool GetBracketingTimeSamples(
@@ -458,7 +456,7 @@ public:
             if (fieldValue->IsHolding<TimeSamples>()) {
                 auto const &ts = fieldValue->UncheckedGet<TimeSamples>();
                 auto const &times = ts.times.Get();
-                auto iter = lower_bound(times.begin(), times.end(), time);
+                auto iter = std::lower_bound(times.begin(), times.end(), time);
                 if (iter == times.end() or *iter != time)
                     return false;
                 if (value) {
@@ -498,7 +496,7 @@ public:
         }
         
         // Insert or overwrite time into newTimes.
-        auto iter = lower_bound(newSamples.times.Get().begin(),
+        auto iter = std::lower_bound(newSamples.times.Get().begin(),
                                 newSamples.times.Get().end(), time);
         if (iter == newSamples.times.Get().end() or *iter != time) {
             auto index = iter - newSamples.times.Get().begin();
@@ -533,7 +531,7 @@ public:
         }
         
         // Insert or overwrite time into newTimes.
-        auto iter = lower_bound(newSamples.times.Get().begin(),
+        auto iter = std::lower_bound(newSamples.times.Get().begin(),
                                 newSamples.times.Get().end(), time);
         if (iter == newSamples.times.Get().end() or *iter != time)
             return;
@@ -690,7 +688,7 @@ private:
         return ret;
     }
 
-    inline std::vector<double> const &
+    inline SdfTimes const &
     _ListTimeSamplesForPath(const SdfAbstractDataSpecId &id) const {
         if (const VtValue* fieldValue =
             _GetFieldValue(id, SdfDataTokens->TimeSamples)) {
@@ -698,13 +696,13 @@ private:
                 return fieldValue->UncheckedGet<TimeSamples>().times.Get();
             }
         }
-        static std::vector<double> empty;
+        static SdfTimes empty;
         return empty;
     }
 
     template <class Data>
-    inline vector<double> _ListAllTimeSamplesHelper(Data const &d) const {
-        vector<double> allTimes, tmp; 
+    inline SdfTimes _ListAllTimeSamplesHelper(Data const &d) const {
+        SdfTimes allTimes, tmp;
         for (auto const &p: d) {
             tmp.swap(allTimes);
             allTimes.clear();
@@ -716,7 +714,7 @@ private:
         return allTimes;
     }
 
-    inline vector<double> _ListAllTimeSamples() const {
+    inline SdfTimes _ListAllTimeSamples() const {
         return _hashData ?
             _ListAllTimeSamplesHelper(*_hashData) :
             _ListAllTimeSamplesHelper(_flatData);
@@ -1031,13 +1029,13 @@ Usd_CrateData::Erase(const SdfAbstractDataSpecId& id, const TfToken & field)
 // ------------------------------------------------------------------------- //
 // Time Sample API.
 //
-std::set<double>
+SdfTimes
 Usd_CrateData::ListAllTimeSamples() const
 {
     return _impl->ListAllTimeSamples();
 }
 
-std::set<double>
+SdfTimes
 Usd_CrateData::ListTimeSamplesForPath(const SdfAbstractDataSpecId& id) const
 {
     return _impl->ListTimeSamplesForPath(id);

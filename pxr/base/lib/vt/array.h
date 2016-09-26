@@ -26,12 +26,34 @@
 
 #include <boost/operators.hpp>
 
+#include "pxr/base/gf/half.h"
+#include "pxr/base/gf/matrix2d.h"
+#include "pxr/base/gf/matrix3d.h"
+#include "pxr/base/gf/matrix4d.h"
+#include "pxr/base/gf/quatd.h"
+#include "pxr/base/gf/quatf.h"
+#include "pxr/base/gf/quath.h"
+#include "pxr/base/gf/traits.h"
+#include "pxr/base/gf/vec2d.h"
+#include "pxr/base/gf/vec2f.h"
+#include "pxr/base/gf/vec2h.h"
+#include "pxr/base/gf/vec2i.h"
+#include "pxr/base/gf/vec3d.h"
+#include "pxr/base/gf/vec3f.h"
+#include "pxr/base/gf/vec3h.h"
+#include "pxr/base/gf/vec3i.h"
+#include "pxr/base/gf/vec4d.h"
+#include "pxr/base/gf/vec4f.h"
+#include "pxr/base/gf/vec4h.h"
+#include "pxr/base/gf/vec4i.h"
+
 #include "pxr/base/vt/hash.h"
 #include "pxr/base/vt/operators.h"
 #include "pxr/base/vt/streamOut.h"
 #include "pxr/base/vt/traits.h"
 #include "pxr/base/vt/types.h"
-#include "pxr/base/vt/cachedNew.h"
+#include "pxr/base/vt/allocator.h"
+#include "pxr/base/vt/rawVector.h"
 
 #include "pxr/base/tf/diagnostic.h"
 #include "pxr/base/tf/iterator.h"
@@ -51,8 +73,6 @@
 #include <vector>
 
 #include <boost/functional/hash.hpp>
-
-#include "pxr/base/vt/alignedAllocator.h"
 
 /// \class VtArray 
 ///
@@ -109,7 +129,20 @@
 template<typename ELEM>
 class VtArray {
 
-    typedef boost::container::vector<ELEM, VtAlignedAllocator<ELEM, 0x20>> _VecType;
+    template <class T>
+    struct _IsBitwiseReadWrite {
+        static const bool value =
+            std::is_enum<T>::value or
+            std::is_arithmetic<T>::value or
+            std::is_same<T, half>::value or
+            std::is_trivial<T>::value or
+            GfIsGfVec<T>::value or
+            GfIsGfMatrix<T>::value or
+            GfIsGfQuat<T>::value;
+    };
+
+    typedef std::conditional_t<
+        _IsBitwiseReadWrite<ELEM>::value, VtRawVector<ELEM>, boost::container::vector<ELEM>> _VecType;
 
     // VtArray should derive from boost::equality_comparable, but because of
     // gcc's awesomeness, that increases the size of VtArray by a pointer.

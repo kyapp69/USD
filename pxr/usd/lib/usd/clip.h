@@ -179,7 +179,7 @@ public:
 
     size_t GetNumTimeSamplesForPath(const SdfAbstractDataSpecId& id) const;
 
-    std::set<ExternalTime>
+    SdfTimes
     ListTimeSamplesForPath(const SdfAbstractDataSpecId& id) const;
 
     bool GetBracketingTimeSamplesForPath(

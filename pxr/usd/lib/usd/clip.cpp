@@ -500,16 +500,17 @@ Usd_Clip::GetNumTimeSamplesForPath(const SdfAbstractDataSpecId& id) const
         _TranslateIdToClip(id).id);
 }
 
-std::set<Usd_Clip::ExternalTime>
+SdfTimes
 Usd_Clip::ListTimeSamplesForPath(const SdfAbstractDataSpecId& id) const
 {
-    const std::set<InternalTime> timeSamplesInClip = 
+    auto timeSamplesInClip = 
         _GetLayerForClip()->ListTimeSamplesForPath(_TranslateIdToClip(id).id);
     if (times.empty()) {
         return timeSamplesInClip;
     }
 
-    std::set<ExternalTime> timeSamples;
+    static thread_local SdfTimes timeSamples;
+    timeSamples.clear();
 
     // We need to convert the internal time samples to the external
     // domain using the clip's time mapping. This is tricky because the
@@ -524,7 +525,7 @@ Usd_Clip::ListTimeSamplesForPath(const SdfAbstractDataSpecId& id) const
             const TimeMapping& m2 = times[i+1];
 
             if (m1.second <= t and t <= m2.second) {
-                timeSamples.insert(_TranslateTimeToExternal(t, m1, m2));
+                timeSamples.push_back(_TranslateTimeToExternal(t, m1, m2));
             }
         }
     }
@@ -536,13 +537,15 @@ Usd_Clip::ListTimeSamplesForPath(const SdfAbstractDataSpecId& id) const
     if (timeSamples.empty()) {
         for (InternalTime t: timeSamplesInClip) {
             if (t < times.front().second) {
-                timeSamples.insert(times.front().first);
+                timeSamples.push_back(times.front().first);
             }
             else if (t > times.back().second) {
-                timeSamples.insert(times.back().first);
+                timeSamples.push_back(times.back().first);
             }
         }
     }
+
+    std::sort(timeSamples.begin(), timeSamples.end());
 
     return timeSamples;
 }

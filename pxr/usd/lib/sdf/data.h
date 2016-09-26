@@ -73,10 +73,10 @@ public:
                        const TfToken& fieldName);
     virtual std::vector<TfToken> List(const SdfAbstractDataSpecId& id) const;
 
-    virtual std::set<double>
+    virtual SdfTimes
     ListAllTimeSamples() const;
     
-    virtual std::set<double>
+    virtual SdfTimes
     ListTimeSamplesForPath(const SdfAbstractDataSpecId& id) const;
 
     virtual bool

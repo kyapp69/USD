@@ -64,7 +64,7 @@ using namespace ::UsdAbc_AlembicUtil;
 
 // The SdfAbstractData time samples type.
 // XXX: SdfAbstractData should typedef this.
-typedef std::set<double> UsdAbc_TimeSamples;
+typedef SdfTimes UsdAbc_TimeSamples;
 
 struct _Subtract {
     double operator()(double x, double y) const { return x - y; }
@@ -321,8 +321,10 @@ UsdSamples::Get(double time) const
 void
 UsdSamples::AddTimes(UsdAbc_TimeSamples* times) const
 {
+    times->resize(_samples->size());
+    size_t i = 0;
     BOOST_FOREACH(const SdfTimeSampleMap::value_type& v, *_samples) {
-        times->insert(v.first);
+        (*times)[i++] = v.first;
     }
 }
 
@@ -745,8 +747,12 @@ _WriterContext::AddTimeSampling(const UsdAbc_TimeSamples& inSamples)
 
     // Scale and offset samples.
     UsdAbc_TimeSamples samples;
-    BOOST_FOREACH(double time, inSamples) {
-        samples.insert((time - _timeOffset) / _timeScale);
+    {
+        samples.resize(inSamples.size());
+        size_t i = 0;
+        BOOST_FOREACH(double time, inSamples) {
+            samples[i++] = ((time - _timeOffset) / _timeScale);
+        }
     }
 
     // Handy iterators.  i refers to the first element and n to end.

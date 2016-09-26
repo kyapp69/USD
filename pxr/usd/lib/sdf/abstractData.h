@@ -49,6 +49,9 @@ class SdfAbstractDataValue;
 
 TF_DECLARE_PUBLIC_TOKENS(SdfDataTokens, SDF_API, SDF_DATA_TOKENS);
 
+typedef std::vector<double> SdfTimes;
+
+
 /// \class SdfAbstractDataSpecId
 ///
 /// Identifies a spec in an SdfAbstractData container. Conceptually, this
@@ -336,10 +339,10 @@ public:
     ///
     /// @{
 
-    virtual std::set<double>
+    virtual SdfTimes
     ListAllTimeSamples() const = 0;
     
-    virtual std::set<double>
+    virtual SdfTimes
     ListTimeSamplesForPath(const SdfAbstractDataSpecId& id) const = 0;
 
     virtual bool
