@@ -550,7 +550,8 @@ private:
 class SdfAbstractDataSpecVisitor
 {
 public:
-    SDF_API virtual ~SdfAbstractDataSpecVisitor();
+	SDF_API
+    virtual ~SdfAbstractDataSpecVisitor();
 
     /// \c SdfAbstractData::VisitSpecs will call this function for every entry
     /// it contains, passing itself as \p data and the entry's spec id as \p id.

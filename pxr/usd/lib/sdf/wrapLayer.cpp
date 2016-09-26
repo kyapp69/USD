@@ -290,7 +290,7 @@ _ApplyRootPrimOrder(
     return result;
 }
 
-static std::set<double>
+static SdfTimes
 _ListTimeSamplesForPath(const SdfLayerHandle& layer, const SdfPath& path)
 {
     return layer->ListTimeSamplesForPath(path);

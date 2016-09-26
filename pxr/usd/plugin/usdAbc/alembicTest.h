@@ -24,26 +24,17 @@
 #ifndef USDABC_ALEMBICTEST_H
 #define USDABC_ALEMBICTEST_H
 
-#include <string>
-#include "pxr/base/arch/export.h"
+#include "pxr/usd/usdAbc/api.h"
 
-#if defined(usdAbc_STATIC)
-#   define USDABC_API
-#   define USDABC_LOCAL
-#else
-#   if defined(usdAbc_EXPORTS)
-#       define USDABC_API ARCH_EXPORT
-#   else
-#       define USDABC_API ARCH_IMPORT
-#   endif
-#   define USDABC_LOCAL ARCH_HIDDEN
-#endif
+#include <string>
 
 /// Test Alembic conversion.
-USDABC_API bool UsdAbc_TestAlembic(const std::string& pathname);
+USDABC_API
+bool UsdAbc_TestAlembic(const std::string& pathname);
 
 /// Read Usd file from \p srcPathname and write as Alembic to \p dstPathname.
-USDABC_API bool UsdAbc_WriteAlembic(const std::string& srcPathname,
+USDABC_API
+bool UsdAbc_WriteAlembic(const std::string& srcPathname,
                          const std::string& dstPathname);
 
 #endif // USDABC_ALEMBICTEST_H
