@@ -38,51 +38,39 @@ using std::string;
 string
 TfGetenv(const string& envName, const string& defaultValue)
 {
-    const char* value = ArchGetEnv(envName).c_str();
-
-    if (!value || value[0] == '\0')
-        return defaultValue;
-    else 
-        return string(value);
+    auto value = ArchGetEnv(envName);
+    return value.empty() ? defaultValue : value;
 }
 
 int
 TfGetenvInt(const string& envName, int defaultValue)
 {
-	const char* value = ArchGetEnv(envName).c_str();
-
-    if (!value || value[0] == '\0')
-        return defaultValue;
-    else 
-        return atoi(value);
+    auto value = ArchGetEnv(envName);
+    return value.empty() ? defaultValue : atoi(value.c_str());
 }
 
 bool
 TfGetenvBool(const string& envName, bool defaultValue)
 {
-    const char* value = ArchGetEnv(envName).c_str();
+    auto value = ArchGetEnv(envName);
 
-    if (!value || value[0] == '\0')
+    if (value.empty())
         return defaultValue;
     else
     {
-        for (char *iter = (char*)value; *iter != '\0'; ++iter)
-            *iter = tolower(*iter);
+        for (char& c : value)
+            c = tolower(c);
 
-		return strcmp(value, "true") == 0 or
-               strcmp(value, "yes") == 0 or
-               strcmp(value, "on") == 0 or
-               strcmp(value, "1") == 0;
+        return value == "true" or
+               value == "yes" or
+               value == "on" or
+               value == "1";
 	}
 }
 
 double
 TfGetenvDouble(const string& envName, double defaultValue)
 {
-	const char* value = ArchGetEnv(envName).c_str();
-
-    if (!value || value[0] == '\0')
-        return defaultValue;
-    else
-        return TfStringToDouble(string(value));
+    auto value = ArchGetEnv(envName);
+    return value.empty() ? defaultValue : TfStringToDouble(value);
 }

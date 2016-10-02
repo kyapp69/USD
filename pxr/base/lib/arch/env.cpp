@@ -35,12 +35,9 @@ std::string ArchGetEnv(const std::string &name)
     if (requiredSize)
     {
         std::string result;
-
-        if (result.size() < requiredSize)
-            result.resize(requiredSize);
-
+        result.resize(requiredSize - 1); // ignore 1 byte for '\0'
         getenv_s(&requiredSize, &result[0], requiredSize, name.c_str());
-        return std::string(result);
+        return result;
     }
     else
         return std::string();
