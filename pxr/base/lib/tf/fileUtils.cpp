@@ -34,7 +34,6 @@
 
 #include <boost/assign.hpp>
 #include <boost/bind.hpp>
-#include <boost/foreach.hpp>
 #include <boost/function.hpp>
 #include <boost/functional/hash.hpp>
 #include <boost/noncopyable.hpp>
@@ -433,7 +432,7 @@ Tf_WalkDirsRec(
     // symbolic link again, omit it from the directory list to prevent the
     // directory from being followed until stat() eventually fails with ELOOP.
     if (followLinks) {
-        BOOST_FOREACH(const string& name, symlinknames) {
+        for (const auto& name : symlinknames) {
             struct stat st;
             if (stat(string(dirpath + "/" + name).c_str(), &st) == 0) {
                 if (S_ISDIR(st.st_mode)) {
@@ -455,7 +454,7 @@ Tf_WalkDirsRec(
     if (topDown and not func(dirpath, &dirnames, filenames))
        return false;
 
-    BOOST_FOREACH(const string& name, dirnames) {
+    for (const auto& name : dirnames) {
         if (not Tf_WalkDirsRec(dirpath + "/" + name,
                 func, topDown, onError, followLinks, linkTargets))
             return false;
@@ -506,20 +505,16 @@ Tf_RmTree(string const& dirpath,
             // not writable by us, or the parent directory is not writable by
             // us.
             if (onError) {
-				onError(dirpath, TfStringPrintf("unlink failed for '%s': %s",
+				onError(dirpath, TfStringPrintf("ArchUnlinkFile failed for '%s': %s",
 					path.c_str(), ArchStrerror(errno).c_str()));
 			}
             // CODE_COVERAGE_ON
         }
     }
 
-#if defined(ARCH_OS_WINDOWS)
-    if (RemoveDirectory(dirpath.c_str()) == TRUE) {
-#else
-	if (rmdir(dirpath.c_str()) != 0) {
-#endif
+	if (ArchRmDir(dirpath.c_str()) != 0) {
         // CODE_COVERAGE_OFF this could happen for all the same reasons the
-        // unlink above could fail.
+        // ArchUnlinkFile above could fail.
         if (onError) {
 			onError(dirpath, TfStringPrintf("rmdir failed for '%s': %s",
 				dirpath.c_str(), ArchStrerror(errno).c_str()));

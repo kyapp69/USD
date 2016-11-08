@@ -40,6 +40,7 @@
 #include <boost/preprocessor.hpp>
 
 #include <boost/iterator/iterator_adaptor.hpp>
+#include <initializer_list>
 
 #include <iosfwd>
 #include <memory>
@@ -185,6 +186,10 @@ public:
     /// Creates a new VtDictionary by moving the supplied \p VtDictionary.
     VT_API
     VtDictionary(VtDictionary && other) = default;
+
+    /// Creates a new VtDictionary from a braced initializer list.
+    VT_API
+    VtDictionary(std::initializer_list<value_type> init);
 
     /// Copy assignment operator
     VT_API
@@ -422,7 +427,7 @@ struct Vt_DefaultGenerator {
 
 // This is a global stateless variable used to get the VtDefault = X syntax in
 // VtDictionaryGet.
-extern Vt_DefaultGenerator VtDefault;
+extern VT_API Vt_DefaultGenerator VtDefault;
 
 /// Return a value held in a VtDictionary, or a default value either if the
 /// supplied key is missing or if the types do not match.

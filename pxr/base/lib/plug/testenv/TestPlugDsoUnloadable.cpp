@@ -22,6 +22,9 @@
 // language governing permissions and limitations under the Apache License.
 //
 #include "pxr/base/plug/testPlugBase.h"
+#include "pxr/base/tf/tf.h"
+
+#if !defined(ARCH_OS_WINDOWS)
 
 // This plugin depends on an undefined external function
 // and so will be unloadable.
@@ -57,3 +60,5 @@ TF_REGISTRY_FUNCTION(TfType)
         .SetFactory<_TestPlugFactory<TestPlugUnloadable> >()
         ;
 }
+
+#endif // #if !defined(ARCH_OS_WINDOWS)

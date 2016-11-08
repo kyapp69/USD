@@ -27,14 +27,17 @@
 #include "pxr/base/tf/stringUtils.h"
 #include "pxr/base/arch/attributes.h"
 #include "pxr/base/arch/fileSystem.h"
+#include "pxr/base/arch/env.h"
 #include <boost/preprocessor/stringize.hpp>
 
 namespace {
 
-const char* pathEnvVarName  = BOOST_PP_STRINGIZE(PXR_PLUGINPATH_NAME);
-const char* buildLocation   = BOOST_PP_STRINGIZE(PXR_BUILD_LOCATION);
-const char* userLocation    = BOOST_PP_STRINGIZE(PXR_USER_LOCATION);
-const char* installLocation = BOOST_PP_STRINGIZE(PXR_INSTALL_LOCATION); 
+const char* pathEnvVarName      = BOOST_PP_STRINGIZE(PXR_PLUGINPATH_NAME);
+const char* buildLocation       = BOOST_PP_STRINGIZE(PXR_BUILD_LOCATION);
+const char* pluginBuildLocation = BOOST_PP_STRINGIZE(PXR_PLUGIN_BUILD_LOCATION);
+const char* userLocation        = ""; //BOOST_PP_STRINGIZE(PXR_USER_LOCATION);
+const char* installLocation     = ""; //BOOST_PP_STRINGIZE(PXR_INSTALL_LOCATION); 
+
 void
 _AppendPathList(std::vector<std::string>* result, const std::string& paths)
 {
@@ -50,12 +53,18 @@ ARCH_CONSTRUCTOR_DEFINE(102, Plug_InitConfig)
     std::vector<std::string> result;
 
     // Environment locations.
-    _AppendPathList(&result, TfGetenv(pathEnvVarName));
+    _AppendPathList(&result, ArchExpandEnvironmentVariables(
+                                TfGetenv(pathEnvVarName)));
 
     // Fallback locations.
-    _AppendPathList(&result, userLocation);
-    //_AppendPathList(&result, buildLocation);
-    //_AppendPathList(&result, installLocation);
+    _AppendPathList(&result, 
+        ArchExpandEnvironmentVariables(userLocation));
+    _AppendPathList(&result, 
+        ArchExpandEnvironmentVariables(buildLocation));
+    _AppendPathList(&result, 
+        ArchExpandEnvironmentVariables(pluginBuildLocation));
+    _AppendPathList(&result, 
+        ArchExpandEnvironmentVariables(installLocation));
 
     Plug_SetPaths(result);
 }
