@@ -246,8 +246,7 @@ SdfData::ListAllTimeSamples() const
     }
 
     // Use a set to determine unique times.
-    static thread_local SdfTimes times;
-    times.clear();
+    SdfTimes times;
 
     TF_FOR_ALL(i, _data) {
         auto& timesForPath = 
@@ -262,7 +261,7 @@ SdfData::ListAllTimeSamples() const
 SdfTimes
 SdfData::ListTimeSamplesForPath(const SdfAbstractDataSpecId& id) const
 {
-    static thread_local SdfTimes times;
+    SdfTimes times;
 
     VtValue value = Get(id, SdfDataTokens->TimeSamples);
     if (value.IsHolding<SdfTimeSampleMap>()) {
@@ -273,9 +272,6 @@ SdfData::ListTimeSamplesForPath(const SdfAbstractDataSpecId& id) const
         TF_FOR_ALL(j, timeSampleMap) {
             times[i++] = (j->first);
         }
-    }
-    else {
-        times.clear();
     }
 
     return times;

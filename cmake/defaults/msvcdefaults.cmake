@@ -39,13 +39,16 @@ add_definitions("/DYY_NO_UNISTD_H")
 
 # Forces all libraries that have separate source, to be linked as
 # DLL's rather than static libraries on Microsoft Window.
-add_definitions("/DBOOST_ALL_DYN_LINK")
+
+##add_definitions("/DBOOST_ALL_DYN_LINK")
+##add_definitions(/"DOPENEXR_DLL")
+add_definitions("/DBOOST_PYTHON_STATIC_LIB")
+add_definitions("/MP")
 
 add_definitions("/DBUILD_OPTLEVEL_OPT")
 
 add_definitions(/"DFLAVOR=\"win64\"")
 
-add_definitions(/"DOPENEXR_DLL")
 
 # Set a decent warning level
 add_definitions("/W3")

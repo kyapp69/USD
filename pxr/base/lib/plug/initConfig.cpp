@@ -54,8 +54,8 @@ ARCH_CONSTRUCTOR_DEFINE(102, Plug_InitConfig)
 
     // Fallback locations.
     _AppendPathList(&result, userLocation);
-    _AppendPathList(&result, buildLocation);
-    _AppendPathList(&result, installLocation);
+    //_AppendPathList(&result, buildLocation);
+    //_AppendPathList(&result, installLocation);
 
     Plug_SetPaths(result);
 }

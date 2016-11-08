@@ -69,6 +69,21 @@ VT_API void VtFixedAllocator::Free(void *addr)
     --_in_use;
 }
 
+#ifdef VT_USE_JEMALLOC
+#include "jemalloc.h"
+
+VT_API void* VtCachedMalloc(size_t size)
+{
+    return je_aligned_alloc(0x20, size);
+}
+
+VT_API void VtCachedFree(size_t size, void *addr)
+{
+    return je_free(addr);
+}
+
+#else
+
 static VtFixedAllocator g_allocators[] = {
     { 0x8, 1 },
     { 0x8, 1 },
@@ -127,3 +142,4 @@ VT_API void VtCachedFree(size_t size, void *addr)
     return g_allocators[_SizeToIndex(size)].Free(addr);
 }
 
+#endif
