@@ -63,14 +63,15 @@ using std::set;
 using std::string;
 using std::vector;
 
+
 static bool
-Tf_Stat(string const& path, bool resolveSymlinks, struct stat* st = 0)
+Tf_Stat(string const& path, bool resolveSymlinks, stat_t* st = 0)
 {
     if (path.empty()) {
         return false;
     }
 
-    struct stat unused;
+    stat_t unused;
     if (not st) {
         st = &unused;
     }
@@ -79,10 +80,10 @@ Tf_Stat(string const& path, bool resolveSymlinks, struct stat* st = 0)
     if (resolveSymlinks) {
         printf("Tf_IsStat: symlink resolving not yet implemented for windows\n");
     }
-    return stat(path.c_str(), st) == 0;
+    return ArchFileStat(path.c_str(), st) == 0;
 #else
     int result = resolveSymlinks ?
-        stat(path.c_str(), st) : lstat(path.c_str(), st);
+        ArchFileStat(path.c_str(), st) : lstat(path.c_str(), st);
 	return result == 0;
 #endif
 }
@@ -102,7 +103,7 @@ TfIsDir(string const& path, bool resolveSymlinks)
     return (attribs != INVALID_FILE_ATTRIBUTES &&
         (attribs & FILE_ATTRIBUTE_DIRECTORY));
 #else
-    struct stat st;
+    stat_t st;
     if (Tf_Stat(path, resolveSymlinks, &st)) {
         return S_ISDIR(st.st_mode);
     }
@@ -119,7 +120,7 @@ TfIsFile(string const& path, bool resolveSymlinks)
     return (attribs != INVALID_FILE_ATTRIBUTES &&
         !(attribs & FILE_ATTRIBUTE_DIRECTORY));
 #else
-    struct stat st;
+    stat_t st;
     if (Tf_Stat(path, resolveSymlinks, &st)) {
         return S_ISREG(st.st_mode);
     }
@@ -136,7 +137,7 @@ TfIsLink(string const& path)
 	return (attribs != INVALID_FILE_ATTRIBUTES &&
 		(attribs & FILE_ATTRIBUTE_REPARSE_POINT));
 #else
-    struct stat st;
+    stat_t st;
     if (Tf_Stat(path, /* resolveSymlinks */ false, &st)) {
         return S_ISLNK(st.st_mode);
     }
@@ -147,7 +148,7 @@ TfIsLink(string const& path)
 bool
 TfIsWritable(string const& path)
 {
-    struct stat st;
+    stat_t st;
     if (Tf_Stat(path, /* resolveSymlinks */ true, &st)) {
         return ArchStatIsWritable(&st);
     }
@@ -230,8 +231,8 @@ Tf_MakeDirsRec(string const& path, int mode)
 
     if (not head.empty() and not tail.empty()) {
 
-        struct stat st;
-        if (stat(head.c_str(), &st) != -1) {
+        stat_t st;
+        if (ArchFileStat(head.c_str(), &st) != -1) {
             // Path exists
             if (not S_ISDIR(st.st_mode)) {
                 TF_RUNTIME_ERROR("Path %s exists, and is not a directory",
@@ -340,7 +341,7 @@ TfReadDir(
 #endif
             // If d_type is not available, or the filesystem has no support
             // for d_type, fall back to lstat.
-            struct stat st;
+            stat_t st;
             if (fstatat(dirfd(dir), entry.d_name, &st, AT_SYMLINK_NOFOLLOW) != 0)
                 continue;
 
@@ -390,7 +391,7 @@ Tf_ReadDir(
 }    
 
 struct Tf_FileId {
-    Tf_FileId(const struct stat& st)
+    Tf_FileId(const stat_t& st)
         : dev(st.st_dev), ino(st.st_ino)
     { }
 
@@ -433,8 +434,8 @@ Tf_WalkDirsRec(
     // directory from being followed until stat() eventually fails with ELOOP.
     if (followLinks) {
         for (const auto& name : symlinknames) {
-            struct stat st;
-            if (stat(string(dirpath + "/" + name).c_str(), &st) == 0) {
+            stat_t st;
+            if (ArchFileStat(string(dirpath + "/" + name).c_str(), &st) == 0) {
                 if (S_ISDIR(st.st_mode)) {
                     Tf_FileId fileId(st);
                     if (linkTargets->find(fileId) != linkTargets->end())

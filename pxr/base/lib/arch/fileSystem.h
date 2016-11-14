@@ -171,6 +171,15 @@ ArchOpenFile(char const* fileName, char const* mode);
 #   define ArchRmDir(path)   rmdir(path)
 #endif
 
+
+#if defined(ARCH_OS_WINDOWS)
+    using stat_t = struct _stat64;
+    #define ArchFileStat(Path, Stat) _stat64(Path, Stat)
+#else
+    using stat_t = stat_t;
+    #define ArchFileStat(Path, Stat) stat(Path, Stat)
+#endif
+
 /// Compares two \c stat structures.
 /// \ingroup group_arch_SystemFunctions
 ///
@@ -180,8 +189,8 @@ ArchOpenFile(char const* fileName, char const* mode);
 ///
 ARCH_API
 int ArchStatCompare(enum ArchStatComparisonOp op,
-		    const struct stat *stat1,
-		    const struct stat *stat2);
+		    const stat_t *stat1,
+		    const stat_t *stat2);
 
 /// Return the length of a file in bytes.
 /// \ingroup group_arch_SystemFunctions
@@ -197,13 +206,13 @@ ARCH_API int64_t ArchGetFileLength(FILE *file);
 /// This returns true if the struct pointer is valid, and the stat indicates
 /// the target is writable by the effective user, effective group, or all
 /// users.
-ARCH_API bool ArchStatIsWritable(const struct stat *st);
+ARCH_API bool ArchStatIsWritable(const stat_t *st);
 
 /// Returns the modification time (mtime) in seconds from the stat struct.
 ///
 /// This function returns the modification time with as much precision as is
 /// available in the stat structure for the current platform.
-ARCH_API double ArchGetModificationTime(const struct stat& st);
+ARCH_API double ArchGetModificationTime(const stat_t& st);
 
 /// Return the path to a temporary directory for this platform.
 ///

@@ -56,15 +56,15 @@ ARCH_CONSTRUCTOR_DEFINE(102, Plug_InitConfig)
     _AppendPathList(&result, ArchExpandEnvironmentVariables(
                                 TfGetenv(pathEnvVarName)));
 
-    // Fallback locations.
-    _AppendPathList(&result, 
-        ArchExpandEnvironmentVariables(userLocation));
-    _AppendPathList(&result, 
-        ArchExpandEnvironmentVariables(buildLocation));
-    _AppendPathList(&result, 
-        ArchExpandEnvironmentVariables(pluginBuildLocation));
-    _AppendPathList(&result, 
-        ArchExpandEnvironmentVariables(installLocation));
+    //// Fallback locations.
+    //_AppendPathList(&result, 
+    //    ArchExpandEnvironmentVariables(userLocation));
+    //_AppendPathList(&result, 
+    //    ArchExpandEnvironmentVariables(buildLocation));
+    //_AppendPathList(&result, 
+    //    ArchExpandEnvironmentVariables(pluginBuildLocation));
+    //_AppendPathList(&result, 
+    //    ArchExpandEnvironmentVariables(installLocation));
 
     Plug_SetPaths(result);
 }

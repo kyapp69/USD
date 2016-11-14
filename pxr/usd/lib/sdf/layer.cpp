@@ -761,9 +761,9 @@ SdfLayer::_Reload(bool force)
         }
 
         // Get the file's mtime on disk.
-        struct stat fileInfo;
+        stat_t fileInfo;
         double mtime = 0;
-        if (stat(realPath.c_str(), &fileInfo) == 0) {
+        if (ArchFileStat(realPath.c_str(), &fileInfo) == 0) {
             mtime = ArchGetModificationTime(fileInfo);
         } else if (errno == ENOENT) {
             // Not existing on disk results in a reload skip.
@@ -2777,8 +2777,8 @@ SdfLayer::_OpenLayerAndUnlockRegistry(
 
         if (not isAnonymous) {
             // Grab modification time.
-            struct stat fileInfo;
-            if (stat(readFilePath.c_str(), &fileInfo) != 0) {
+            stat_t fileInfo;
+            if (ArchFileStat(readFilePath.c_str(), &fileInfo) != 0) {
                 layer->_FinishInitialization(/* success = */ false);
                 return TfNullPtr;
             }
@@ -3757,8 +3757,8 @@ SdfLayer::_Save(bool force) const
         return false;
 
     // Record modification time.
-    struct stat fileInfo;
-    if (stat(path.c_str(), &fileInfo) != 0)
+    stat_t fileInfo;
+    if (ArchFileStat(path.c_str(), &fileInfo) != 0)
         return false;
     _assetModificationTime = ArchGetModificationTime(fileInfo);
 

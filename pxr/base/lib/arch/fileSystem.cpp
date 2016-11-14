@@ -96,7 +96,7 @@ int ArchRmDir(const char* path)
 
 #if defined(ARCH_OS_LINUX) || defined(ARCH_OS_DARWIN)
 int
-ArchGetFilesystemStats(const char *path, struct statfs *buf)
+ArchGetFilesystemStats(const char *path, stat_tfs *buf)
 {
     return statfs(path, buf) != -1;
 }
@@ -104,8 +104,8 @@ ArchGetFilesystemStats(const char *path, struct statfs *buf)
 
 int
 ArchStatCompare(enum ArchStatComparisonOp op,
-		const struct stat *stat1,
-		const struct stat *stat2)
+		const stat_t *stat1,
+		const stat_t *stat2)
 {
 #if defined(ARCH_OS_LINUX) || defined(ARCH_OS_DARWIN) || defined(ARCH_OS_WINDOWS)
     switch (op) {
@@ -128,7 +128,7 @@ ArchStatCompare(enum ArchStatComparisonOp op,
 }
 
 bool
-ArchStatIsWritable(const struct stat *st)
+ArchStatIsWritable(const stat_t *st)
 {
 #if defined(ARCH_OS_LINUX) || defined (ARCH_OS_DARWIN)
     if (st) {
@@ -149,7 +149,7 @@ ArchStatIsWritable(const struct stat *st)
 }
 
 double
-ArchGetModificationTime(const struct stat& st)
+ArchGetModificationTime(const stat_t& st)
 {
 #if defined(ARCH_OS_LINUX)
     return st.st_mtim.tv_sec + 1e-9*st.st_mtim.tv_nsec;
@@ -164,7 +164,7 @@ ArchGetModificationTime(const struct stat& st)
 }
 
 double
-ArchGetAccessTime(const struct stat& st)
+ArchGetAccessTime(const stat_t& st)
 {
 #if defined(ARCH_OS_LINUX)
     return st.st_atim.tv_sec + 1e-9*st.st_atim.tv_nsec;
@@ -179,7 +179,7 @@ ArchGetAccessTime(const struct stat& st)
 }
 
 double
-ArchGetStatusChangeTime(const struct stat& st)
+ArchGetStatusChangeTime(const stat_t& st)
 {
 #if defined(ARCH_OS_LINUX)
     return st.st_ctim.tv_sec + 1e-9*st.st_ctim.tv_nsec;
@@ -207,7 +207,7 @@ ArchGetFileLength(FILE *file)
     if (!file)
         return -1;
 #if defined (ARCH_OS_LINUX) || defined (ARCH_OS_DARWIN)
-    struct stat buf;
+    stat_t buf;
     return fstat(fileno(file), &buf) < 0 ? -1 :
         static_cast<int64_t>(buf.st_size);
 #elif defined (ARCH_OS_WINDOWS)
@@ -223,7 +223,7 @@ int64_t
 ArchGetFileLength(const char* fileName)
 {
 #if defined (ARCH_OS_LINUX) || defined (ARCH_OS_DARWIN)
-    struct stat buf;
+    stat_t buf;
     return stat(fileName, &buf) < 0 ? -1 : static_cast<int64_t>(buf.st_size);
 #elif defined (ARCH_OS_WINDOWS)
     return ArchGetFileLength(_UniqueFILE(ArchOpenFile(fileName, "rb")).get());
