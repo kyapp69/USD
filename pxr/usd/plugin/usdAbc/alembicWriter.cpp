@@ -650,6 +650,7 @@ public:
     void SetArchive(const OArchive& archive);
 
     /// Returns the archive.
+    OArchive& GetArchive() { return _archive; }
     const OArchive& GetArchive() const { return _archive; }
 
     /// Sets the writer schema.
@@ -838,6 +839,7 @@ public:
                              const TfToken& fieldName) const;
 
     /// Returns the archive.
+    OArchive& GetArchive();
     const OArchive& GetArchive() const;
 
     /// Returns the writer schema.
@@ -968,6 +970,11 @@ _PrimWriterContext::GetPropertyField(
     return _context.GetData().Get(propId, fieldName);
 }
 
+OArchive&
+_PrimWriterContext::GetArchive()
+{
+    return _context.GetArchive();
+}
 const OArchive&
 _PrimWriterContext::GetArchive() const
 {
