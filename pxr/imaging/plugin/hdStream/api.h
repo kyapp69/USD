@@ -21,48 +21,25 @@
 // KIND, either express or implied. See the Apache License for the specific
 // language governing permissions and limitations under the Apache License.
 //
-#include "pxr/base/tf/errorMark.h"
-#include "pxr/base/tf/diagnostic.h"
-#include "pxr/base/arch/nap.h"
-#include "pxr/base/arch/stackTrace.h"
+#ifndef HDSTREAM_API_H
+#define HDSTREAM_API_H
 
-#include <thread>
+#include "pxr/base/arch/export.h"
 
-#include <iostream>
+#if defined(STATIC)
+#   define HDSTREAM_API
+#   define HDSTREAM_LOCAL
+#else
+#   if defined(EXPORTS)
+#       define HDSTREAM_API ARCH_EXPORT
+#       define HDSTREAM_API_TEMPLATE_CLASS(...)
+#       define HDSTREAM_API_TEMPLATE_STRUCT(...)
+#   else
+#       define HDSTREAM_API ARCH_IMPORT
+#       define HDSTREAM_API_TEMPLATE_CLASS(...) extern template class HDSTREAM_API __VA_ARGS__
+#       define HDSTREAM_API_TEMPLATE_STRUCT(...) extern template struct HDSTREAM_API __VA_ARGS__
+#   endif
+#   define HDSTREAM_LOCAL ARCH_HIDDEN
+#endif
 
-/**
- * This executable performs an invalid memory reference (SIGSEGV)
- * for testing of the Tf crash handler
- */
-
-static void
-_ThreadTask()
-{
-    TfErrorMark m;
-    TF_RUNTIME_ERROR("Pending secondary thread error for crash report!");
-    ArchSleep(600); // 10 minutes.
-}
-
-int
-main(int argc, char **argv)
-{
-    ArchSetFatalStackLogging( true );
-
-    // Make sure handlers have been installed
-    // This isn't guaranteed in external environments
-    // as we leave them off by default.
-    TfInstallTerminateAndCrashHandlers();
-
-    TfErrorMark m;
-
-    TF_RUNTIME_ERROR("Pending error to report in crash output!");
-
-    std::thread t(_ThreadTask);
-
-    ArchSleep(1);
-
-    int* bunk(0);
-    std::cout << *bunk << '\n';
-}
-
-
+#endif
